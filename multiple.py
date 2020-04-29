@@ -7,7 +7,6 @@ import random
 import requests
 import threading # 导入threading模块
 from queue import Queue #导入queue模块
-import time  #导入time模块
 from lxml import etree
 
 
@@ -110,9 +109,9 @@ def getdetail(filepath,keyword,Num,detail_url_queue, headers,i):
         item=detail_url_queue.get()
 
         Download(filepath, keyword, item,j, headers)
-        print("thread {id}:download finished".format(id=id))  # 打印线程id和被爬取了文章内容的url
+#         print("thread {id}:download finished".format(id=id))  # 打印线程id和被爬取了文章内容的url
         j += 1
-        # if (j > Num):  # 如果你下载的图片够用了，那就直接退出循环，结束程序。
+        if (j > Num):  # 如果你下载的图片够用了，那就直接退出循环，结束程序。
 
 
     # 主函数
@@ -143,13 +142,13 @@ def main():
     if (len(Arr) == 2):
         pageStart = int(Arr[1])
     detail_url_queue = Queue(maxsize=1000)  # 用Queue构造一个大小为1000的线程安全的先进先出队列
-    # 先创造四个线程
+    # 先创造theadnumber个线程
     thread = threading.Thread(target=urlQueue, args=(pageStart,pageNum,url,detail_url_queue,))  # A线程负责抓取列表url
     html_thread = []
     for i in range(int(theadnumber)):
         thread2 = threading.Thread(target=getdetail, args=(filepath,keyword,Num,detail_url_queue, headers,i))
         html_thread.append(thread2)  # B C D 线程抓取文章详情
-    # 启动四个线程
+    # 启动theadnumber个线程
     thread.start()
     for i in range(int(theadnumber)):
         html_thread[i].start()
@@ -157,16 +156,6 @@ def main():
     thread.join()
     for i in range(int(theadnumber)):
         html_thread[i].join()
-
-
-    # for i in range(pageStart, pageNum):
-    #     PicUrl = GetLinks(url, i + 1)
-    #     for item in PicUrl:
-    #         # print(item)
-    #         Download(filepath, keyword, item, j, headers)
-    #         j += 1
-    #         if (j > Num):  # 如果你下载的图片够用了，那就直接退出循环，结束程序。
-    #             return
 
 
 if __name__ == '__main__':

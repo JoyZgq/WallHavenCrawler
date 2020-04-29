@@ -22,7 +22,7 @@ def GetUrl(keyword, category):
     params = {
         'q': keyword,
         'categories': category,
-        'purity': '111',  # 100\010\110
+        'purity': '110',  # 100\010\110
         'sorting': 'favorites',  # relevance\random\date_added\views\favorites\toplist\toplist-beta
         'topRange': '1y',  # 1y\6M\3M\1w\3d\1d
         # 'atleast':'1920x1080',
